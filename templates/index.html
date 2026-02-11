@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block title %}Summarizer — Notes Summarizer{% endblock %}
+
+{% block content %}
+
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title"><span class="gradient-text">Summarizer</span> Tool</h1>
+            <p class="page-subtitle">
+                Paste text or upload a PDF to get a category-balanced extractive summary.
+            </p>
+        </div>
+    </section>
+
+    <main class="container main-content">
+
+        {% if error_message %}
+        <div class="alert alert-error">
+            <span class="alert-icon">⚠️</span>
+            <span>{{ error_message }}</span>
+        </div>
+        {% endif %}
+
+        <section class="card">
+            <div class="card-header">
+                <span class="card-icon">✏️</span>
+                <h2>Enter Your Notes</h2>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" class="input-form">
+
+                <div class="form-group">
+                    <label for="input_text">Paste your text below</label>
+                    <textarea
+                        id="input_text"
+                        name="input_text"
+                        rows="10"
+                        placeholder="Paste your academic notes here…"
+                    >{{ original_text if original_text else '' }}</textarea>
+                    <div class="textarea-hint">Minimum 30 words for meaningful results</div>
+                </div>
+
+                <div class="form-divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="pdf_file">Upload a PDF file</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="pdf_file" name="pdf_file" accept=".pdf">
+                        <div class="file-upload-label" id="file-label">
+                            <span class="upload-icon">📎</span>
+                            <span class="upload-text">Click to choose a PDF or drag it here</span>
+                            <span class="upload-hint">Max 16 MB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="options-row">
+                    <div class="form-group option-group">
+                        <label for="summary_length">Summary length</label>
+                        <div class="select-wrapper">
+                            <select id="summary_length" name="summary_length">
+                                <option value="short"  {{ 'selected' if selected_length == 'short'  }}>Short — 20% of sentences</option>
+                                <option value="medium" {{ 'selected' if selected_length == 'medium' }}>Medium — 35% of sentences</option>
+                                <option value="long"   {{ 'selected' if selected_length == 'long'   }}>Long — 50% of sentences</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary btn-full" id="submitBtn">
+                    Generate Summary
+                </button>
+            </form>
+
+            {% if summary_result or original_text %}
+            <a href="{{ url_for('summarizer_page') }}" class="btn-secondary">
+                New Summary
+            </a>
+            {% endif %}
+        </section>
+
+        {% if summary_result %}
+        <section class="card result-card fade-in">
+            <div class="card-header result-header">
+                <span class="card-icon">📄</span>
+                <h2>Summary Result</h2>
+                <span class="result-badge">Extractive</span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{ summary_result.num_original }}</div>
+                    <div class="stat-label">Original Sentences</div>
+                </div>
+                <div class="stat-card stat-card-accent">
+                    <div class="stat-value">{{ summary_result.num_summary }}</div>
+                    <div class="stat-label">Summary Sentences</div>
+                </div>
+                <div class="stat-card stat-card-success">
+                    <div class="stat-value">{{ ((1 - summary_result.num_summary / summary_result.num_original) * 100) | round(1) }}%</div>
+                    <div class="stat-label">Compression</div>
+                </div>
+            </div>
+
+            <div class="compression-bar-wrapper">
+                <div class="compression-label">
+                    <span>Compression</span>
+                    <span>{{ ((1 - summary_result.num_summary / summary_result.num_original) * 100) | round(1) }}% reduced</span>
+                </div>
+                <div class="compression-bar">
+                    <div class="compression-fill" style="width: {{ ((1 - summary_result.num_summary / summary_result.num_original) * 100) | round(1) }}%"></div>
+                </div>
+            </div>
+
+            {% if summary_result.categories_found %}
+            <div class="category-section">
+                <div class="category-row">
+                    <span class="category-label">Detected in text:</span>
+                    <div class="category-tags">
+                        {% for cat in summary_result.categories_found %}
+                        <span class="cat-tag cat-found">{{ cat }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="category-row">
+                    <span class="category-label">Covered in summary:</span>
+                    <div class="category-tags">
+                        {% for cat in summary_result.categories_covered %}
+                        <span class="cat-tag cat-covered">{{ cat }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="summary-box">
+                <div class="summary-box-header">
+                    <span>Generated Summary</span>
+                </div>
+                <div class="summary-content">
+                    <p>{{ summary_result.summary }}</p>
+                </div>
+            </div>
+
+            <a href="{{ url_for('summarizer_page') }}" class="btn-new-summary">
+                Start New Summary
+            </a>
+
+            <details class="scores-detail">
+                <summary class="scores-toggle">
+                    <span>View All Sentence Scores</span>
+                    <span class="toggle-hint">(ranked by TF-IDF importance)</span>
+                </summary>
+                <div class="table-wrapper">
+                    <table class="scores-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Sentence</th>
+                                <th>TF-IDF Score</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sentence, score in summary_result.sentence_scores %}
+                            <tr>
+                                <td>
+                                    <span class="rank-badge {% if loop.index <= 3 %}rank-top{% endif %}">
+                                        {{ loop.index }}
+                                    </span>
+                                </td>
+                                <td class="sentence-cell">{{ sentence }}</td>
+                                <td>
+                                    <div class="score-cell">
+                                        <span class="score-value">{{ score | round(4) }}</span>
+                                        <div class="score-bar">
+                                            {% set max_score = summary_result.sentence_scores[0][1] %}
+                                            <div class="score-fill" style="width: {{ (score / max_score * 100) | round(1) }}%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+        </section>
+        {% endif %}
+
+    </main>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.getElementById('pdf_file').addEventListener('change', function() {
+            var label = document.getElementById('file-label');
+            if (this.files.length > 0) {
+                label.querySelector('.upload-text').textContent = this.files[0].name;
+                label.classList.add('file-selected');
+            }
+        });
+
+        {% if summary_result %}
+        document.querySelector('.result-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        {% endif %}
+    </script>
+{% endblock %}

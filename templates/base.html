@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Notes Summarizer{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="{{ url_for('home') }}" class="nav-brand">
+                <span class="nav-logo">📝</span>
+                <span class="nav-name">NotesSummarizer</span>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('summarizer_page') }}" class="{% if request.endpoint == 'summarizer_page' %}active{% endif %}">Summarizer</a></li>
+                <li><a href="{{ url_for('how_it_works') }}" class="{% if request.endpoint == 'how_it_works' %}active{% endif %}">How It Works</a></li>
+                <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <span class="footer-logo">📝</span>
+                        <span>NotesSummarizer</span>
+                    </div>
+                    <p class="footer-desc">
+                        An extractive NLP summarization tool built with classical
+                        statistical techniques. No external AI APIs used.
+                    </p>
+                </div>
+                <div style="text-align: left;" class="footer-col">
+                    <h4>Pages</h4>
+                    <ul style="text-align: left;">
+                        <li><a href="{{ url_for('home') }}">Home</a></li>
+                        <li><a href="{{ url_for('summarizer_page') }}">Summarizer</a></li>
+                        <li><a href="{{ url_for('how_it_works') }}">How It Works</a></li>
+                        <li><a href="{{ url_for('about') }}">About</a></li>
+                    </ul>
+                </div>
+                <div style="text-align: left;" class="footer-col">
+                    <h4>Tech Stack</h4>
+                    <ul style="text-align: left;">
+                        <li>Python &amp; Flask</li>
+                        <li>NLTK</li>
+                        <li>scikit-learn</li>
+                        <li>TF-IDF</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>MSc Computer Science Project &mdash; Extractive NLP Summarization &mdash; 2026</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('navToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('open');
+            this.classList.toggle('open');
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

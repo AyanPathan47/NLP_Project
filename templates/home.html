@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block title %}Notes Summarizer — Home{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-badge">MSc Computer Science Project</div>
+        <h1 class="hero-title">
+            Automatic Notes <span class="gradient-text">Summarizer</span>
+        </h1>
+        <p class="hero-subtitle">
+            Condense long academic notes into short, meaningful summaries
+            using <strong>TF-IDF</strong> scoring &mdash; no AI APIs, fully transparent.
+        </p>
+        <div class="hero-cta">
+            <a href="{{ url_for('summarizer_page') }}" class="btn-primary btn-lg">
+                Try the Summarizer
+            </a>
+            <a href="{{ url_for('how_it_works') }}" class="btn-outline btn-lg">
+                How It Works
+            </a>
+        </div>
+        <div class="hero-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Flask</span>
+            <span class="tag">NLTK</span>
+            <span class="tag">scikit-learn</span>
+            <span class="tag">TF-IDF</span>
+            <span class="tag">Extractive NLP</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Key Features</h2>
+        <p class="section-subtitle">
+            Built for students who need quick, reliable summaries they can understand and explain.
+        </p>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📌</div>
+                <h3>Extractive, Not Abstractive</h3>
+                <p>Picks the most important <strong>original sentences</strong> from your text. Nothing is reworded or made up.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Transparent Scoring</h3>
+                <p>Uses <strong>TF-IDF</strong>, a well-known statistical formula. You can inspect how every sentence was ranked.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🗂️</div>
+                <h3>Category-Balanced</h3>
+                <p>Detects topics like causes, impacts, and solutions. Ensures the summary covers <strong>all major themes</strong>.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📄</div>
+                <h3>PDF &amp; Text Input</h3>
+                <p>Paste text directly or upload a PDF. Content is extracted and processed from both formats.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📏</div>
+                <h3>Adjustable Length</h3>
+                <p>Choose <strong>Short (20%)</strong>, <strong>Medium (35%)</strong>, or <strong>Long (50%)</strong> depending on how much detail you need.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Runs Locally</h3>
+                <p>Everything processes on your machine. No data sent to any cloud service. Your notes stay <strong>private</strong>.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Three steps from raw notes to a concise summary.</p>
+
+        <div class="pipeline">
+            <div class="pipeline-step">
+                <div class="step-number">1</div>
+                <div class="step-icon">📄</div>
+                <h3>Input</h3>
+                <p>Paste your notes or upload a PDF document</p>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-step">
+                <div class="step-number">2</div>
+                <div class="step-icon">⚙️</div>
+                <h3>Process</h3>
+                <p>TF-IDF scores each sentence by word importance</p>
+            </div>
+            <div class="pipeline-arrow">&rarr;</div>
+            <div class="pipeline-step">
+                <div class="step-number">3</div>
+                <div class="step-icon">✅</div>
+                <h3>Summarize</h3>
+                <p>Top-ranked sentences are extracted as your summary</p>
+            </div>
+        </div>
+
+        <div class="text-center" style="margin-top: 1.75rem;">
+            <a href="{{ url_for('how_it_works') }}" class="btn-outline">
+                Read the Full Algorithm &rarr;
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">Built With</h2>
+        <p class="section-subtitle">Standard Python libraries — nothing exotic.</p>
+
+        <div class="tech-grid">
+            <div class="tech-card">
+                <div class="tech-name">Python 3</div>
+                <div class="tech-role">Language</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-name">Flask</div>
+                <div class="tech-role">Web Framework</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-name">NLTK</div>
+                <div class="tech-role">Tokenization</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-name">scikit-learn</div>
+                <div class="tech-role">TF-IDF</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-name">NumPy</div>
+                <div class="tech-role">Math</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-name">pdfplumber</div>
+                <div class="tech-role">PDF Parsing</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card">
+            <h2>Ready to try it?</h2>
+            <p>Paste your text or upload a PDF and get an extractive summary in seconds.</p>
+            <a href="{{ url_for('summarizer_page') }}" class="btn-primary btn-lg">
+                Open the Summarizer
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

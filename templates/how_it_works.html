@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}How It Works — Notes Summarizer{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">How It <span class="gradient-text">Works</span></h1>
+        <p class="page-subtitle">
+            A step-by-step look at the extractive summarization algorithm.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container container-narrow">
+
+        <div class="algo-step">
+            <div class="algo-step-header">
+                <span class="algo-num">01</span>
+                <h2>Sentence Tokenization</h2>
+            </div>
+            <p>
+                The input text is split into individual sentences using NLTK's
+                <code>sent_tokenize</code>. This handles abbreviations (e.g., "Dr.", "U.S.A.")
+                and edge cases so each sentence is correctly identified.
+            </p>
+            <div class="algo-example">
+                <strong>Input:</strong> "Climate change is real. Temperatures are rising globally."<br>
+                <strong>Output:</strong> ["Climate change is real.", "Temperatures are rising globally."]
+            </div>
+        </div>
+
+        <div class="algo-step">
+            <div class="algo-step-header">
+                <span class="algo-num">02</span>
+                <h2>Text Preprocessing</h2>
+            </div>
+            <p>
+                Each sentence is cleaned <strong>for scoring only</strong> (the original sentences
+                are preserved for the final summary). The cleaning steps:
+            </p>
+            <div class="algo-substeps">
+                <div class="algo-substep">
+                    <span class="substep-label">a) Lowercasing</span>
+                    <span class="substep-desc">"The" and "the" become the same token</span>
+                </div>
+                <div class="algo-substep">
+                    <span class="substep-label">b) Punctuation Removal</span>
+                    <span class="substep-desc">Prevents "word." and "word" being treated differently</span>
+                </div>
+                <div class="algo-substep">
+                    <span class="substep-label">c) Stopword Removal</span>
+                    <span class="substep-desc">Filters common words like "is", "the", "and"</span>
+                </div>
+            </div>
+            <div class="algo-callout">
+                <strong>Key point:</strong> Preprocessing only affects scoring. The summary
+                output uses the original, unmodified sentences.
+            </div>
+        </div>
+
+        <div class="algo-step">
+            <div class="algo-step-header">
+                <span class="algo-num">03</span>
+                <h2>TF-IDF Vectorization</h2>
+            </div>
+            <p>
+                Each cleaned sentence is converted into a numerical vector using
+                <strong>TF-IDF</strong> (Term Frequency–Inverse Document Frequency):
+            </p>
+            <div class="formula-grid">
+                <div class="formula-card">
+                    <div class="formula-name">TF (Term Frequency)</div>
+                    <div class="formula-desc">How often a word appears in a sentence</div>
+                </div>
+                <div class="formula-card">
+                    <div class="formula-name">IDF (Inverse Document Frequency)</div>
+                    <div class="formula-desc">How rare a word is across all sentences — rare words score higher</div>
+                </div>
+                <div class="formula-card formula-card-accent">
+                    <div class="formula-name">TF-IDF = TF × IDF</div>
+                    <div class="formula-desc">Words that are frequent in one sentence but rare overall get the highest scores</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="algo-step">
+            <div class="algo-step-header">
+                <span class="algo-num">04</span>
+                <h2>Sentence Scoring</h2>
+            </div>
+            <p>
+                For each sentence, we <strong>sum all its TF-IDF values</strong> to get a single
+                importance score. Sentences with many distinctive, high-scoring words rank
+                higher.
+            </p>
+            <div class="algo-example">
+                Sentence: "Glaciers are melting due to rising temperatures"<br>
+                → Words like "glaciers", "melting", "temperatures" get high TF-IDF weights<br>
+                → This sentence gets a high overall score
+            </div>
+        </div>
+
+        <div class="algo-step">
+            <div class="algo-step-header">
+                <span class="algo-num">05</span>
+                <h2>Category-Balanced Selection</h2>
+            </div>
+            <p>
+                Instead of blindly picking the top N sentences, the algorithm detects
+                <strong>academic categories</strong> and ensures each detected category
+                is represented in the summary:
+            </p>
+            <div class="category-demo">
+                <span class="cat-tag cat-found">Causes</span>
+                <span class="cat-tag cat-found">Environmental Impact</span>
+                <span class="cat-tag cat-found">Human &amp; Social Impact</span>
+                <span class="cat-tag cat-found">Consequences</span>
+                <span class="cat-tag cat-found">Solutions</span>
+            </div>
+            <div class="algo-substeps">
+                <div class="algo-substep">
+                    <span class="substep-label">Phase A</span>
+                    <span class="substep-desc">Pick the highest-scoring sentence from each detected category</span>
+                </div>
+                <div class="algo-substep">
+                    <span class="substep-label">Phase B</span>
+                    <span class="substep-desc">Fill remaining slots with top overall TF-IDF sentences</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="algo-step">
+            <div class="algo-step-header">
+                <span class="algo-num">06</span>
+                <h2>Reorder &amp; Output</h2>
+            </div>
+            <p>
+                Selected sentences are sorted back into their <strong>original order</strong>
+                so the summary reads naturally — preserving the logical flow of the
+                source text.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="container container-narrow">
+        <h2 class="section-title">Limitations</h2>
+        <p class="section-subtitle">What this system cannot do.</p>
+
+        <div class="limitations-list">
+            <div class="limitation-item">
+                <span class="limit-icon">⚠️</span>
+                <div>
+                    <strong>Extractive only</strong> — cannot generate new sentences or paraphrase.
+                    It can only select sentences that exist in the original text.
+                </div>
+            </div>
+            <div class="limitation-item">
+                <span class="limit-icon">⚠️</span>
+                <div>
+                    <strong>No semantic understanding</strong> — TF-IDF is a statistical (bag-of-words)
+                    method. It measures word frequency and rarity, not meaning.
+                </div>
+            </div>
+            <div class="limitation-item">
+                <span class="limit-icon">⚠️</span>
+                <div>
+                    <strong>No cross-sentence reasoning</strong> — each sentence is scored independently.
+                    The algorithm doesn't consider coherence or redundancy between sentences.
+                </div>
+            </div>
+            <div class="limitation-item">
+                <span class="limit-icon">⚠️</span>
+                <div>
+                    <strong>English only</strong> — the stopword list and tokenizer are configured for English text.
+                </div>
+            </div>
+            <div class="limitation-item">
+                <span class="limit-icon">⚠️</span>
+                <div>
+                    <strong>PDF layout issues</strong> — complex PDFs (multi-column, tables) may produce
+                    messy extracted text.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card">
+            <h2>Try It Yourself</h2>
+            <p>Now that you know how it works — give it a go with your own notes.</p>
+            <a href="{{ url_for('summarizer_page') }}" class="btn-primary btn-lg">
+                Open the Summarizer
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

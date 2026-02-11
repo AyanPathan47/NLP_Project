@@ -1,0 +1,6 @@
+Flask>=3.0
+gunicorn>=22.0
+nltk>=3.9
+scikit-learn>=1.5
+pdfplumber>=0.11
+numpy>=1.26

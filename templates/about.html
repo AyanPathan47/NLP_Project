@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}About — Notes Summarizer{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">About This <span class="gradient-text">Project</span></h1>
+        <p class="page-subtitle">
+            An MSc Computer Science project exploring extractive text summarization
+            using classical NLP techniques.
+        </p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container container-narrow">
+
+        <div class="about-card">
+            <div class="about-card-icon">🎓</div>
+            <h2>Project Overview</h2>
+            <p>
+                This project implements an <strong>Automatic Extractive Notes Summarization</strong>
+                system using Natural Language Processing (NLP) techniques. It was developed as
+                an academic project for MSc Computer Science evaluation.
+            </p>
+            <p>
+                The core idea: given a long piece of academic text, the system identifies
+                the most important sentences using statistical analysis (TF-IDF) and presents
+                them as a concise summary — without generating any new text or calling
+                external AI services.
+            </p>
+        </div>
+
+        <div class="about-card">
+            <div class="about-card-icon">💡</div>
+            <h2>What Makes This Different?</h2>
+            <div class="diff-grid">
+                <div class="diff-item">
+                    <div class="diff-header">
+                        <span class="diff-label diff-this">This project</span>
+                    </div>
+                    <ul>
+                        <li>Extractive — selects existing sentences</li>
+                        <li>Unsupervised — no training data needed</li>
+                        <li>Statistical — uses TF-IDF formula</li>
+                        <li>Local — runs entirely on your machine</li>
+                        <li>Transparent — you can see every score</li>
+                    </ul>
+                </div>
+                <div class="diff-item">
+                    <div class="diff-header">
+                        <span class="diff-label diff-other">ChatGPT / LLMs</span>
+                    </div>
+                    <ul>
+                        <li>Abstractive — generates new text</li>
+                        <li>Supervised — trained on massive data</li>
+                        <li>Neural — uses deep learning</li>
+                        <li>Cloud — requires API calls</li>
+                        <li>Black-box — output is unexplainable</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-card">
+            <div class="about-card-icon">📚</div>
+            <h2>Academic Context</h2>
+            <p>
+                Text summarization is one of the core tasks in NLP research. It falls
+                into two broad categories:
+            </p>
+            <div class="approach-grid">
+                <div class="approach-card approach-highlight">
+                    <h3>Extractive Summarization ✓</h3>
+                    <p>
+                        Selects the most important sentences from the original document.
+                        No new text is generated. Uses statistical methods like TF-IDF,
+                        TextRank, or LSA.
+                    </p>
+                    <span class="approach-badge">Used in this project</span>
+                </div>
+                <div class="approach-card">
+                    <h3>Abstractive Summarization</h3>
+                    <p>
+                        Generates new sentences that paraphrase the original content.
+                        Requires deep learning models (BART, T5, GPT) and large
+                        training datasets.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-card">
+            <div class="about-card-icon">🛠️</div>
+            <h2>Technology Stack</h2>
+            <table class="about-table">
+                <thead>
+                    <tr>
+                        <th>Technology</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Python 3</strong></td>
+                        <td>Core programming language</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Flask</strong></td>
+                        <td>Lightweight web framework</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NLTK</strong></td>
+                        <td>Sentence tokenization &amp; stopword lists</td>
+                    </tr>
+                    <tr>
+                        <td><strong>scikit-learn</strong></td>
+                        <td>TF-IDF vectorization</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NumPy</strong></td>
+                        <td>Array operations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pdfplumber</strong></td>
+                        <td>PDF text extraction</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HTML + CSS</strong></td>
+                        <td>Frontend interface</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="about-card">
+            <div class="about-card-icon">📖</div>
+            <h2>References</h2>
+            <ul class="references-list">
+                <li>
+                    Luhn, H. P. (1958). <em>The Automatic Creation of Literature Abstracts.</em>
+                    IBM Journal of Research and Development.
+                </li>
+                <li>
+                    Salton, G. &amp; Buckley, C. (1988). <em>Term-weighting approaches in
+                    automatic text retrieval.</em> Information Processing &amp; Management.
+                </li>
+                <li>
+                    NLTK Documentation —
+                    <a href="https://www.nltk.org/" target="_blank" rel="noopener">nltk.org</a>
+                </li>
+                <li>
+                    scikit-learn TF-IDF —
+                    <a href="https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html" target="_blank" rel="noopener">sklearn TfidfVectorizer</a>
+                </li>
+                <li>
+                    Flask Documentation —
+                    <a href="https://flask.palletsprojects.com/" target="_blank" rel="noopener">flask.palletsprojects.com</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card">
+            <h2>Give it a try</h2>
+            <p>Paste your notes or upload a PDF — see extractive summarization in action.</p>
+            <a href="{{ url_for('summarizer_page') }}" class="btn-primary btn-lg">
+                Open the Summarizer
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
